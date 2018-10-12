@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
   <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -30,7 +29,10 @@
       }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/lib/jquery.form.js" type="text/javascript"></script>
     <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.2.0/build/ol.js"></script>
+    <script src="js/shpcontrol.js"  type="text/javascript"></script>
+
   </head>
 
   <body id="page-top">
@@ -48,6 +50,8 @@
                   zoom: 4
               })
           });
+
+          bs_input_file();
       });
 
   </script>
@@ -826,12 +830,28 @@
           </button>
         </div>
         <div class="modal-body">
-          ...
+          <form method="POST" action="/shpSave.do" enctype="multipart/form-data" id="shpSaveForm">
+            <!-- COMPONENT START -->
+            <div class="form-group">
+              <div class="input-group input-file" name="Fichier1">
+                <input type="text" class="form-control" placeholder='Choose a file...'  id="inputGroupFile01"/>
+                <span class="input-group-btn">
+        		<button class="btn btn-default btn-choose" type="button" >Choose</button>
+    		</span>
+              </div>
+            </div>
+            <!-- COMPONENT END -->
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary pull-right" disabled>Submit</button>
+              <button type="reset" class="btn btn-danger">Reset</button>
+            </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-primary" onclick="shpSave()"> Save changes</button>
         </div>
+        </form>
       </div>
     </div>
   </div>

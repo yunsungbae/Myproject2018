@@ -1,37 +1,51 @@
 function shpSave(){
-    var form = $('#shpSaveForm')[0];
-    var formData = new FormData(form);
-    debugger;
-    formData.append("fileObj", $("#exampleFormControlFile1")[0].files[0]);
-    $.ajax({
-        url: 'shpSave.do',
-        processData: false,
-        contentType: false,
-        data: formData,
-        type: 'POST',
-        success: function(result){
-            alert("업로드 성공!!");
+    $('#ajaxform').ajaxForm({ //보내기전 validation check가 필요할경우
+        beforeSubmit: function (data, frm, opt) { alert("전송전!!"); return true; },
+        success: function(responseText, statusText){ alert("전송성공!!"); },
+        error: function(){ alert("에러발생!!"); } });
+
+
+
+
+    // var form = $('#shpSaveForm')[0];
+    // var formData = new FormData(form);
+    //
+    // formData.append("fileObj", $("#inputGroupFile01")[0].files[0]);
+    // $.ajax({
+    //     url: 'shpSave.do',
+    //     processData: false,
+    //     contentType: false,
+    //     data: formData,
+    //     type: 'POST',
+    //     success: function(result){
+    //         alert("업로드 성공!!");
+    //     }
+    // });
+}
+function bs_input_file() {
+    $(".input-file").before(
+        function() {
+            if ( ! $(this).prev().hasClass('input-ghost') ) {
+                var element = $("<input type='file' class='input-ghost' style='visibility:hidden; height:0'>");
+                element.attr("name",$(this).attr("name"));
+                element.change(function(){
+                    element.next(element).find('input').val((element.val()).split('\\').pop());
+                });
+                $(this).find("button.btn-choose").click(function(){
+                    element.click();
+                });
+                $(this).find("button.btn-reset").click(function(){
+                    element.val(null);
+                    $(this).parents(".input-file").find('input').val('');
+                });
+                $(this).find('input').css("cursor","pointer");
+                $(this).find('input').mousedown(function() {
+                    $(this).parents('.input-file').prev().click();
+                    return false;
+                });
+                return element;
+            }
         }
-    });
+    );
 }
 
-//
-// 출처: http://cofs.tistory.com/181 [CofS]
-//
-//
-//
-//     $('#shpSaveForm').ajaxForm({
-//         beforeSubmit: function (data,form,option) {
-//             //validation체크
-//             //막기위해서는 return false를 잡아주면됨
-//             return true;
-//         },
-//         success: function(response,status){
-//             //성공후 서버에서 받은 데이터 처리
-//             alert("업로드 성공!!");
-//         },
-//         error: function(){
-//             //에러발생을 위한 code페이지
-//         }
-//     });
-//};
