@@ -1,7 +1,8 @@
 package egovframework.example.cmmn.service.impl;
 
-import egovframework.nlip.common.util.CommonUtil;
-import egovframework.nlip.process.am.cmm.vo.FileVO;
+
+import egovframework.example.cmmn.util.CommonUtil;
+import egovframework.example.cmmn.vo.FileVO;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import org.apache.log4j.Logger;
@@ -30,7 +31,7 @@ public class EgovFileMngUtil {
     @Resource(name = "propertiesService")
     protected EgovPropertyService propertyService;
 
-    @Resource(name = "egovFileIdGnrService")
+    @Resource(name = "egovIdGnrService")
     private EgovIdGnrService idgenService;
 
 

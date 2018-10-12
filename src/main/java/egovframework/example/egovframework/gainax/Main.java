@@ -1,5 +1,7 @@
 package egovframework.example.egovframework.gainax;
 
+import egovframework.example.cmmn.service.impl.EgovFileMngUtil;
+import egovframework.example.cmmn.vo.FileVO;
 import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.geotools.data.DataStore;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.HashMap;
@@ -25,6 +28,12 @@ import java.util.List;
 import java.util.Map;
 @Controller
 public class Main {
+    /*
+  	 * 파일관리 유틸 서비스를 사용하기 위한 변수
+  	 */
+    @Resource(name="EgovFileMngUtil")
+    private EgovFileMngUtil fileUtil;
+
     @RequestMapping(value = "/index.do")
     public String selectIndex(final HttpServletRequest request, ModelMap model) throws Exception {
 //        File file = new File("example.shp");
@@ -51,10 +60,10 @@ public class Main {
         return "Main/index";
     }
     @RequestMapping(value = "/shpSave.do")
-    public String ShpSave(final HttpServletRequest request, ModelMap model) throws Exception {
-        final MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-
-//
+    public String ShpSave(final HttpServletRequest request, ModelMap model,MultipartHttpServletRequest multiRequest) throws Exception {
+        final Map<String, MultipartFile> files = multiRequest.getFileMap();
+        List<FileVO> result = null;
+        	result = fileUtil.parseFileInf(files, "TN_FAQ_BBS_", 0, "", "","","");
 //        final Map<String, MultipartFile> files = multiRequest.getfile();
 //        String realFolder = "d:/upload2/";
 //        String originFileName  = files.get(0).getOriginalFilename();
@@ -67,12 +76,12 @@ public class Main {
 
 
 
-        files.get(0).transferTo(new File(savePath)); // 파일 저장
-
-        File file = new File(savePath);
+//        files.get(0).transferTo(new File(savePath)); // 파일 저장
+//
+//        File file = new File(savePath);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("url", file.toURI().toURL());
+//        map.put("url", file.toURI().toURL());
 
         DataStore dataStore = DataStoreFinder.getDataStore(map);
         String typeName = dataStore.getTypeNames()[0];
