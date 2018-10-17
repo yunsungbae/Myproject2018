@@ -2,6 +2,7 @@ package egovframework.example.egovframework.gainax;
 
 import egovframework.example.cmmn.service.impl.EgovFileMngUtil;
 import egovframework.example.cmmn.vo.FileVO;
+import egovframework.example.cmmn.web.NlipController;
 import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.geotools.data.DataStore;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -27,7 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 @Controller
-public class Main {
+public class Main extends NlipController {
     /*
   	 * 파일관리 유틸 서비스를 사용하기 위한 변수
   	 */
@@ -60,7 +62,8 @@ public class Main {
         return "Main/index";
     }
     @RequestMapping(value = "/shpSave.do")
-    public String ShpSave(final HttpServletRequest request, ModelMap model,MultipartHttpServletRequest multiRequest) throws Exception {
+    @ResponseBody
+    public Object  ShpSave(final HttpServletRequest request, ModelMap model,MultipartHttpServletRequest multiRequest) throws Exception {
         final Map<String, MultipartFile> files = multiRequest.getFileMap();
         List<FileVO> result = null;
         	result = fileUtil.parseFileInf(files, "TN_FAQ_BBS_", 0, "", "","","");
@@ -101,7 +104,38 @@ public class Main {
             }
         }
 
-        return "Main/index";
+        return "true";
+    }
+    @RequestMapping(value = "/shpSave2.do")
+    public String  ShpSave2( ModelMap model,MultipartHttpServletRequest multiRequest) throws Exception {
+        String rtnUrl = "jsonView";
+        final Map<String, MultipartFile> files = multiRequest.getFileMap();
+        List<FileVO> result = null;
+        result = fileUtil.parseFileInf(files, "TN_FAQ_BBS_", 0, "", "","","");
+
+
+        Map<String, Object> map = new HashMap<>();
+//        map.put("url", file.toURI().toURL());
+
+        DataStore dataStore = DataStoreFinder.getDataStore(map);
+        String typeName = dataStore.getTypeNames()[0];
+
+        FeatureSource<SimpleFeatureType, SimpleFeature> source =
+                dataStore.getFeatureSource(typeName);
+        Filter filter = Filter.INCLUDE; // ECQL.toFilter("BBOX(THE_GEOM, 10,20,30,40)")
+
+        FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures(filter);
+        try (FeatureIterator<SimpleFeature> features = collection.features()) {
+            while (features.hasNext()) {
+                SimpleFeature feature = features.next();
+                System.out.print(feature.getID());
+                System.out.print(": ");
+                System.out.println(feature.getDefaultGeometryProperty().getValue());
+
+            }
+        }
+
+        return rtnUrl;
     }
 }
 

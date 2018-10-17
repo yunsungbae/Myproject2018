@@ -1,26 +1,67 @@
 function shpSave(){
-    $('#ajaxform').ajaxForm({ //보내기전 validation check가 필요할경우
-        beforeSubmit: function (data, frm, opt) { alert("전송전!!"); return true; },
-        success: function(responseText, statusText){ alert("전송성공!!"); },
-        error: function(){ alert("에러발생!!"); } });
+
+    // $('#shpSaveForm').ajaxForm({
+    //     url: "/shpSave2.do",
+    //     enctype: "multipart/form-data", // 여기에 url과 enctype은 꼭 지정해주어야 하는 부분이며 multipart로 지정해주지 않으면 controller로 파일을 보낼 수 없음
+    //     success: function(result){
+    //         alert(result);
+    //     }
+    // });
+    //
+    // $("#shpSaveForm").submit();
 
 
+
+
+    // $('#shpSaveForm').ajaxfileupload({
+    //     action: '/shpSave2.do'
+    // });
 
 
     // var form = $('#shpSaveForm')[0];
     // var formData = new FormData(form);
-    //
-    // formData.append("fileObj", $("#inputGroupFile01")[0].files[0]);
-    // $.ajax({
-    //     url: 'shpSave.do',
-    //     processData: false,
-    //     contentType: false,
-    //     data: formData,
-    //     type: 'POST',
-    //     success: function(result){
-    //         alert("업로드 성공!!");
-    //     }
-    // });
+
+    //formData.append("fileObj",form[0].files[0]);
+// debugger;
+//     $.ajax({
+//         url: '/shpSave.do',
+//         processData: false,
+//         contentType: false,
+//         data: formData,
+//         type: 'POST',
+//         success: function(result){
+//       debugger;
+//             alert("업로드 성공!!");
+//         },
+//         error:function(resiult) {
+//             debugger;
+//             alert("error");
+//         }
+//
+//     });
+    var form = $('#shpSaveForm')[0];
+    var formData = new FormData();
+
+    formData.append("fileObj",form[0].files[0]);
+debugger;
+    $.ajax({
+        url: '/shpSave2.do',
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        type: 'POST',
+        success: function(result){
+            debugger;
+            alert("업로드 성공!!");
+        },
+        error:function(resiult) {
+            debugger;
+            alert("error");
+        }
+
+    });
 }
 function bs_input_file() {
     $(".input-file").before(

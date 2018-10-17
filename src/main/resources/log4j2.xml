@@ -6,6 +6,10 @@
         </Console>
     </Appenders>
     <Loggers>
+        <Logger name="egovLogger" level="DEBUG" additivity="false">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="file"/>
+        </Logger>
         <Logger name="java.sql" level="INFO" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
@@ -16,11 +20,11 @@
         <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
-        <Logger name="org.springframework" level="INFO" additivity="false">
+        <Logger name="org.springframework" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
-        <Root level="INFO">
-            <AppenderRef ref="console" />
-        </Root>
+        <Root level="ERROR">
+        <AppenderRef ref="console" />
+    </Root>
     </Loggers>
 </Configuration>

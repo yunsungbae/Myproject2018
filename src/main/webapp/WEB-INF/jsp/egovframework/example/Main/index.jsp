@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/jsp/egovframework/gainax/commonTag.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -28,11 +30,99 @@
         width: 100%;
       }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="js/lib/jquery.form.js" type="text/javascript"></script>
+    <%--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>--%>
+    <script src="vendor/jquery/jquery.min.js"></script>
     <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.2.0/build/ol.js"></script>
     <script src="js/shpcontrol.js"  type="text/javascript"></script>
 
+
+    <script type="text/template" id="qq-template-manual-trigger">
+      <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Drop files here">
+        <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+          <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+        </div>
+        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+          <span class="qq-upload-drop-area-text-selector"></span>
+        </div>
+        <div class="buttons">
+          <div class="qq-upload-button-selector qq-upload-button">
+            <div>Select files</div>
+          </div>
+          <button type="button" id="trigger-upload" class="btn btn-primary">
+            <i class="icon-upload icon-white"></i> Upload
+          </button>
+        </div>
+        <span class="qq-drop-processing-selector qq-drop-processing">
+                <span>Processing dropped files...</span>
+                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+            </span>
+        <ul class="qq-upload-list-selector qq-upload-list" aria-live="polite" aria-relevant="additions removals">
+          <li>
+            <div class="qq-progress-bar-container-selector">
+              <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+            </div>
+            <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+            <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
+            <span class="qq-upload-file-selector qq-upload-file"></span>
+            <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
+            <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+            <span class="qq-upload-size-selector qq-upload-size"></span>
+            <button type="button" class="qq-btn qq-upload-cancel-selector qq-upload-cancel">Cancel</button>
+            <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">Retry</button>
+            <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">Delete</button>
+            <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+          </li>
+        </ul>
+
+        <dialog class="qq-alert-dialog-selector">
+          <div class="qq-dialog-message-selector"></div>
+          <div class="qq-dialog-buttons">
+            <button type="button" class="qq-cancel-button-selector">Close</button>
+          </div>
+        </dialog>
+
+        <dialog class="qq-confirm-dialog-selector">
+          <div class="qq-dialog-message-selector"></div>
+          <div class="qq-dialog-buttons">
+            <button type="button" class="qq-cancel-button-selector">No</button>
+            <button type="button" class="qq-ok-button-selector">Yes</button>
+          </div>
+        </dialog>
+
+        <dialog class="qq-prompt-dialog-selector">
+          <div class="qq-dialog-message-selector"></div>
+          <input type="text">
+          <div class="qq-dialog-buttons">
+            <button type="button" class="qq-cancel-button-selector">Cancel</button>
+            <button type="button" class="qq-ok-button-selector">Ok</button>
+          </div>
+        </dialog>
+      </div>
+    </script>
+
+    <style>
+      #trigger-upload {
+        color: white;
+        background-color: #00ABC7;
+        font-size: 14px;
+        padding: 7px 20px;
+        background-image: none;
+      }
+
+      #fine-uploader-manual-trigger .qq-upload-button {
+        margin-right: 15px;
+      }
+
+      #fine-uploader-manual-trigger .buttons {
+        width: 36%;
+      }
+
+      #fine-uploader-manual-trigger .qq-uploader .qq-total-progress-bar-container {
+        width: 60%;
+      }
+    </style>
+
+    <title>Fine Uploader Manual Upload Trigger Demo</title>
   </head>
 
   <body id="page-top">
@@ -52,6 +142,28 @@
           });
 
           bs_input_file();
+
+          $("#saveShape").click(function(){
+              // shpSave();
+              $('#shpSaveForm').ajaxForm({
+                  beforeSubmit: function (data,form,option) {
+                      //validation체크
+                      //막기위해서는 return false를 잡아주면됨
+                      return true;
+                  },
+                  success: function(response,status){
+                      //성공후 서버에서 받은 데이터 처리
+                      alert("업로드 성공!!");
+                  },
+                  error: function(){
+                      //에러발생을 위한 code페이지
+                  }
+              });
+
+              $("#shpSaveForm").submit();
+          });
+
+
       });
 
   </script>
@@ -800,7 +912,8 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
+
+  <script src="http://malsup.github.com/jquery.form.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
@@ -829,31 +942,26 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+        <form method="POST" action="/shpSave2.do" enctype="multipart/form-data" encoding="multipart/form-data" id="shpSaveForm">
+          <%--<form method="POST" action="/shpSave2.do"  id="shpSaveForm">--%>
         <div class="modal-body">
-          <form method="POST" action="/shpSave.do" enctype="multipart/form-data" id="shpSaveForm">
+
             <!-- COMPONENT START -->
-            <div class="form-group">
-              <div class="input-group input-file" name="Fichier1">
-                <input type="text" class="form-control" placeholder='Choose a file...'  id="inputGroupFile01"/>
-                <span class="input-group-btn">
-        		<button class="btn btn-default btn-choose" type="button" >Choose</button>
-    		</span>
-              </div>
-            </div>
-            <!-- COMPONENT END -->
-            <div class="form-group">
-              <button type="submit" class="btn btn-primary pull-right" disabled>Submit</button>
-              <button type="reset" class="btn btn-danger">Reset</button>
-            </div>
+
+              <label for="exampleFormControlFile1">Example file input</label>
+              <input type="file" class="form-control-file" id="exampleFormControlFile1" name="exampleFormControlFile1">
+
 
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="shpSave()"> Save changes</button>
+          <button type="button" class="btn btn-primary" id="saveShape"> Save changes</button>
         </div>
         </form>
+
       </div>
     </div>
+
   </div>
 
 
