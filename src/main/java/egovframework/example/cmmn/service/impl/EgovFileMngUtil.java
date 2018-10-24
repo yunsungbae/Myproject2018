@@ -43,7 +43,7 @@ public class EgovFileMngUtil {
 
     private boolean extCheck(String ext){
 
-    	String[] extName ={"doc","docs","xls","xlsx","ppt","pptx","hwp","jpg","gif","png","tif","bmp","pdf","zip"};
+    	String[] extName ={"doc","docs","xls","xlsx","ppt","pptx","hwp","jpg","gif","png","tif","bmp","pdf","zip","shp"};
     	for(int i=0; i<extName.length; i++){
     		if(extName[i].equals(ext)){
     			return true;

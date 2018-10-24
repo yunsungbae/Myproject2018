@@ -15,5 +15,14 @@
 	<bean id="dbClientOne" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="dbClientOne_"/>
 	</bean>
+	<!-- 실행환경에서 빈이름 참조(EgovAbstractDAO) -->
+	<bean id="egov.lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true" />
+
+	<bean id="egov.sqlMapClient" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:/egovframework/sqlmap/example/sql-mapper-config.xml"/>
+		<property name="dataSource" ref="egov.dataSource"/>
+
+	</bean>
+
 
 </beans>

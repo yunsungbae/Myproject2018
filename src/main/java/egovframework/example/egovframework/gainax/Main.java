@@ -1,18 +1,21 @@
 package egovframework.example.egovframework.gainax;
 
+import com.vividsolutions.jts.geom.GeometryFactory;
 import egovframework.example.cmmn.service.impl.EgovFileMngUtil;
 import egovframework.example.cmmn.vo.FileVO;
 import egovframework.example.cmmn.web.NlipController;
 import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import org.geotools.data.DataStore;
-import org.geotools.data.DataStoreFinder;
-import org.geotools.data.FeatureSource;
+import org.geotools.data.*;
+import org.geotools.data.shapefile.ShpFiles;
+import org.geotools.data.shapefile.shp.ShapefileReader;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
+
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -112,28 +115,32 @@ public class Main extends NlipController {
         final Map<String, MultipartFile> files = multiRequest.getFileMap();
         List<FileVO> result = null;
         result = fileUtil.parseFileInf(files, "TN_FAQ_BBS_", 0, "", "","","");
+        String file_url = result.get(0).streCoursNm+"/"+ result.get(0).streFileNm;
+        File file = new File("d:/nlipfiles/SIGNGU_TAS.shp");
 
 
-        Map<String, Object> map = new HashMap<>();
+        ShpFiles shpFile = new ShpFiles("d:/nlipfiles/SIGNGU_TAS.shp");
+        GeometryFactory geometryFactory = new GeometryFactory();
+        ShapefileReader gtlReader = new ShapefileReader(shpFile, false, true, geometryFactory);
+//        Map<String, Object> map = new HashMap<>();
 //        map.put("url", file.toURI().toURL());
-
-        DataStore dataStore = DataStoreFinder.getDataStore(map);
-        String typeName = dataStore.getTypeNames()[0];
-
-        FeatureSource<SimpleFeatureType, SimpleFeature> source =
-                dataStore.getFeatureSource(typeName);
-        Filter filter = Filter.INCLUDE; // ECQL.toFilter("BBOX(THE_GEOM, 10,20,30,40)")
-
-        FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures(filter);
-        try (FeatureIterator<SimpleFeature> features = collection.features()) {
-            while (features.hasNext()) {
-                SimpleFeature feature = features.next();
-                System.out.print(feature.getID());
-                System.out.print(": ");
-                System.out.println(feature.getDefaultGeometryProperty().getValue());
-
-            }
-        }
+//
+//        FileDataStore store = FileDataStoreFinder.getDataStore(file);
+//        String typeName = store.getTypeNames()[0];
+//        FeatureSource<SimpleFeatureType, SimpleFeature> source =
+//                store.getFeatureSource(typeName);
+//        Filter filter = Filter.INCLUDE; // ECQL.toFilter("BBOX(THE_GEOM, 10,20,30,40)")
+//
+//        FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures(filter);
+//        try (FeatureIterator<SimpleFeature> features = collection.features()) {
+//            while (features.hasNext()) {
+//                SimpleFeature feature = features.next();
+//                System.out.print(feature.getID());
+//                System.out.print(": ");
+//                System.out.println(feature.getDefaultGeometryProperty().getValue());
+//
+//            }
+//        }
 
         return rtnUrl;
     }
