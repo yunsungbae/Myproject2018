@@ -7,8 +7,11 @@ import egovframework.example.cmmn.web.NlipController;
 import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.geotools.data.*;
-import org.geotools.data.shapefile.ShpFiles;
+import org.geotools.data.shapefile.ShapefileDataStore;
+
 import org.geotools.data.shapefile.shp.ShapefileReader;
+import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.simple.SimpleFeature;
@@ -38,7 +41,7 @@ public class Main extends NlipController {
   	 */
     @Resource(name="EgovFileMngUtil")
     private EgovFileMngUtil fileUtil;
-
+    private SimpleFeatureSource featureSource;
     @RequestMapping(value = "/index.do")
     public String selectIndex(final HttpServletRequest request, ModelMap model) throws Exception {
 //        File file = new File("example.shp");
@@ -119,9 +122,16 @@ public class Main extends NlipController {
         File file = new File("d:/nlipfiles/SIGNGU_TAS.shp");
 
 
-        ShpFiles shpFile = new ShpFiles("d:/nlipfiles/SIGNGU_TAS.shp");
-        GeometryFactory geometryFactory = new GeometryFactory();
-        ShapefileReader gtlReader = new ShapefileReader(shpFile, false, true, geometryFactory);
+      //  ShpFiles shpFile = new ShpFiles("d:/nlipfiles/SIGNGU_TAS.shp");
+        FileDataStore store = FileDataStoreFinder.getDataStore(file);
+        featureSource = store.getFeatureSource();
+
+//        ShapefileDataStore shapefile = new ShapefileDataStore(file.toURI().toURL());
+//
+//        SimpleFeatureIterator features = shapefile.getFeatureSource().getFeatures().features();
+//        SimpleFeature shp;
+//        GeometryFactory geometryFactory = new GeometryFactory();
+//        ShapefileReader gtlReader = new ShapefileReader(shpFile, false, true, geometryFactory);
 //        Map<String, Object> map = new HashMap<>();
 //        map.put("url", file.toURI().toURL());
 //
@@ -144,5 +154,7 @@ public class Main extends NlipController {
 
         return rtnUrl;
     }
+
+
 }
 
